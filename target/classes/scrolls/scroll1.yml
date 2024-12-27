@@ -1,0 +1,10 @@
+item:
+  name: ''
+  lore: [] # $need_count, $now_count, $rarity
+  material: PAPER
+  glowing: false
+scroll:
+  type: KILL_MOB
+  mob: COW
+  count: 11-17
+  rarity: COMMON

@@ -1,0 +1,9 @@
+item:
+  name: ''
+  lore: [] # $need_count, $now_count, $rarity
+  material: PAPER
+  glowing: false
+scroll:
+  type: PLAY_TIME
+  count: 60
+  rarity: COMMON

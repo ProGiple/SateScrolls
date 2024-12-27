@@ -1,0 +1,9 @@
+item:
+  name: ''
+  lore: [] # $need_count, $now_count, $rarity
+  material: PAPER
+  glowing: false
+scroll:
+  type: WAIT_TIME
+  count: 300-600
+  rarity: COMMON

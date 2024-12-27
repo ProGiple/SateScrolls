@@ -1,0 +1,10 @@
+item:
+  name: ''
+  lore: [] # $need_count, $now_count, $rarity
+  material: PAPER
+  glowing: false
+scroll:
+  type: BREAK_ITEM
+  item_material: NETHERITE_SWORD
+  count: 1-3
+  rarity: COMMON

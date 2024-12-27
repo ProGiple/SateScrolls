@@ -1,0 +1,25 @@
+inactiveScroll:
+  stackable: false # могут ли они стакаться?
+  material: PAPER
+  glowing: false
+  name: ''
+  lore: []
+completedScroll:
+  stackable: false # могут ли они стакаться?
+  material: PAPER
+  glowing: true
+  name: ''
+  lore: [] # $rarity
+config:
+  mainScrollsCanStack: false # могут ли они стакаться?
+  loadExamples: true
+messages:
+  noPerm: "&bSateScrolls » &fУ вас нет прав!"
+  noArgs: "&bSateScrolls » &fНе хватает аргументов для команды!"
+  unknownCommand: "&bSateScrolls » &fНеизвестная команда!"
+  reloadAll: "&bSateScrolls » &fВы перезагрузили все конфиги!"
+  reloadMessages: "&bSateScrolls » &fВы перезагрузили сообщения!"
+  reloadScrolls: "&bSateScrolls » &fВы перезагрузили свитки!"
+  reloadRarities: "&bSateScrolls » &fВы перезагрузили редкости!"
+  playerOffline: "&bSateScrolls » &fИгрок не в сети!"
+  left: "&bSateScrolls » &fОсталось &b$left / $max &fшт."
