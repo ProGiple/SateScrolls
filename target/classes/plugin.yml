@@ -1,5 +1,5 @@
 name: SateScrolls
-version: '1.0.2'
+version: '1.0.6.1'
 main: org.comp.progiple.satescrolls.SateScrolls
 api-version: '1.16'
 commands:

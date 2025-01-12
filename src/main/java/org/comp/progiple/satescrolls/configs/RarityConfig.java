@@ -1,9 +1,11 @@
 package org.comp.progiple.satescrolls.configs;
 
 import lombok.Getter;
+import lombok.SneakyThrows;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.inventory.ItemStack;
 import org.comp.progiple.satescrolls.scrolls.Rarity;
 
 import java.io.File;
@@ -22,7 +24,7 @@ public class RarityConfig {
         this.file = file;
         this.reload();
 
-        String id = file.getName().replace(".yml", "");
+        String id = file.getName().replace(".yml", "").toUpperCase();
         this.rarity = new Rarity(id, this.getString("name"), this.getDouble("chance"));
         rarityCfgMap.put(this.rarity, this);
     }
@@ -41,5 +43,11 @@ public class RarityConfig {
 
     public ConfigurationSection getMenuSection() {
         return this.cfg.getConfigurationSection("menu");
+    }
+
+    @SneakyThrows
+    public void setItem(String id, ItemStack itemStack) {
+        this.cfg.set(String.format("menu.items.loot.%s", id), itemStack);
+        this.cfg.save(this.file);
     }
 }

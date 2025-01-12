@@ -1,8 +1,22 @@
-name: ''
+name: '&7Обычная'
 chance: 90.1
 menu:
   title: ''
   rows: 4
+  maxLootItems: 11
   items:
-    decorative: []
-    loot: []
+    decorative:
+      0:
+        material: WHITE_STAINED_GLASS_PANE
+        displayName: "&7Разделитель"
+        lore: [ ]
+        slotsInt:
+          - 17
+          - 18
+          - 26
+          - 27
+    loot:
+      0:
+        material: STONE
+        amount: 12
+      1: ItemStack

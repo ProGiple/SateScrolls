@@ -6,6 +6,8 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.comp.progiple.satescrolls.SateScrolls;
 import org.comp.progiple.satescrolls.Utils;
+import org.novasparkle.lunaspring.Configuration.Configuration;
+import org.novasparkle.lunaspring.Configuration.IConfig;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -14,17 +16,17 @@ import java.util.Map;
 public class Config {
     @Getter private static final Map<String, String> messageMap = new HashMap<>();
 
-    private FileConfiguration cfg;
+    private final IConfig cfg;
     static {
-        reload();
+        cfg = new IConfig(SateScrolls.getPlugin());
     }
 
     public void reload() {
-        cfg = SateScrolls.getPlugin().getConfig();
+        cfg.reload(SateScrolls.getPlugin());
     }
 
     public ConfigurationSection getSection(String path) {
-        return cfg.getConfigurationSection(path);
+        return cfg.getSection(path);
     }
 
     public boolean getBool(String path) {

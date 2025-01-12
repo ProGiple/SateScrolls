@@ -1,9 +1,10 @@
 item:
-  name: ''
+  name: 'Craft'
   lore: [] # $need_count, $now_count, $rarity
   material: PAPER
   glowing: false
 scroll:
-  type: WAIT_TIME
-  count: 300-600
+  type: CRAFT
+  item_material: NETHERITE_INGOT
+  count: 1-3
   rarity: COMMON

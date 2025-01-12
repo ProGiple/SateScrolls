@@ -9,6 +9,7 @@ import org.comp.progiple.satescrolls.scrolls.Rarity;
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 public class ScrollConfig {
     @Getter private final static Map<String, ScrollConfig> scrollCfgMap = new HashMap<>();
@@ -21,7 +22,7 @@ public class ScrollConfig {
     }
 
     public Rarity getRarity() {
-        return Rarity.getRarityMap().get(this.getScrollSection().getString("rarity"));
+        return Rarity.getRarityMap().get(Objects.requireNonNull(this.cfg.getString("scroll.rarity")).toUpperCase());
     }
 
     public ConfigurationSection getItemSection() {

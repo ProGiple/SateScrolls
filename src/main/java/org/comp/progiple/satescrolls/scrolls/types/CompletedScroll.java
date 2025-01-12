@@ -6,12 +6,11 @@ import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
-import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.comp.progiple.satescrolls.SateScrolls;
 import org.comp.progiple.satescrolls.Utils;
-import org.comp.progiple.satescrolls.configs.Config;
 import org.comp.progiple.satescrolls.scrolls.IScroll;
 import org.comp.progiple.satescrolls.scrolls.Rarity;
 
@@ -38,12 +37,12 @@ public class CompletedScroll implements IScroll {
         meta.setDisplayName(Utils.color(section.getString("name")));
 
         List<String> lore = section.getStringList("lore");
-        lore.forEach(line -> Utils.color(line.replace("$rarity", this.rarity.getName())));
+        lore.replaceAll(line -> Utils.color(line.replace("$rarity", this.rarity.getName())));
         meta.setLore(lore);
         this.item.setItemMeta(meta);
 
         if (section.getBoolean("glowing")) {
-            this.item.addEnchantment(Enchantment.ARROW_FIRE, 1);
+            this.item.addUnsafeEnchantment(Enchantment.ARROW_FIRE, 1);
         }
 
         NBT.modify(this.item, nbt -> {
@@ -51,19 +50,7 @@ public class CompletedScroll implements IScroll {
             nbt.setString("stackable", section.getBoolean("stackable") ? null : UUID.randomUUID().toString());
             nbt.setString("rarity", this.rarity.getId());
         });
-    }
-
-    public CompletedScroll(ItemStack item) {
-        this.item = item;
-        this.rarity = Rarity.getRarityMap().get(NBT.get(this.item, nbt -> (String) nbt.getString("rarity")));
-        NBT.modify(this.item, nbt -> {
-            nbt.setString("stackable", Config.getBool("completedScroll.stackable") ? null : UUID.randomUUID().toString());
-        });
-    }
-
-    @Override
-    public void onClick(PlayerInteractEvent e) {
-
+        SateScrolls.getIScrollSet().add(this);
     }
 
     @Override

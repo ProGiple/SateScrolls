@@ -19,30 +19,33 @@ public class Utils {
         loadRaritiesConfigs();
         loadScrollConfigs();
         loadMessages();
+        Config.reload();
     }
 
     public void loadScrollConfigs() {
-        File scrollDir = new File("scrolls");
-        System.out.println(scrollDir);
-        if (scrollDir.exists()) {
+        File scrollDir = new File(SateScrolls.getPlugin().getDataFolder(), "scrolls");
+        if (scrollDir.exists() && scrollDir.isDirectory()) {
             ScrollConfig.getScrollCfgMap().clear();
             for (File file : Objects.requireNonNull(scrollDir.listFiles())) {
+                if (!file.exists() || file.isDirectory()) continue;
                 new ScrollConfig(file);
             }
         }
     }
 
     public void loadRaritiesConfigs() {
-        File rarityDir = new File("rarities");
-        if (rarityDir.exists()) {
+        File rarityDir = new File(SateScrolls.getPlugin().getDataFolder(), "rarities");
+        if (rarityDir.exists() && rarityDir.isDirectory()) {
             RarityConfig.getRarityCfgMap().clear();
             for (File file : Objects.requireNonNull(rarityDir.listFiles())) {
+                if (!file.exists() || file.isDirectory()) continue;
                 new RarityConfig(file);
             }
         }
     }
 
     public void loadMessages() {
+        Config.getMessageMap().clear();
         for (String messageId : Config.getSection("messages").getKeys(false)) {
             Config.getMessageMap().put(messageId, Utils.color(Config.getString(String.format("messages.%s", messageId))));
         }
