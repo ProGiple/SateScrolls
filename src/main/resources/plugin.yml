@@ -2,6 +2,11 @@ name: SateScrolls
 version: '${project.version}'
 main: org.comp.progiple.satescrolls.SateScrolls
 api-version: '1.16'
+authors:
+  - ProGiple
+depend:
+  - LunaSpring
+  - NBTAPI
 commands:
   satescrolls:
     aliases:

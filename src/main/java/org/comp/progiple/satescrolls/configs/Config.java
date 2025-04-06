@@ -1,21 +1,14 @@
 package org.comp.progiple.satescrolls.configs;
 
-import lombok.Getter;
 import lombok.experimental.UtilityClass;
+import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.comp.progiple.satescrolls.SateScrolls;
-import org.comp.progiple.satescrolls.Utils;
-import org.novasparkle.lunaspring.Configuration.Configuration;
-import org.novasparkle.lunaspring.Configuration.IConfig;
-
-import java.util.HashMap;
-import java.util.Map;
+import org.novasparkle.lunaspring.API.Configuration.IConfig;
+import org.novasparkle.lunaspring.API.Events.CooldownPrevent;
 
 @UtilityClass
 public class Config {
-    @Getter private static final Map<String, String> messageMap = new HashMap<>();
-
     private final IConfig cfg;
     static {
         cfg = new IConfig(SateScrolls.getPlugin());
@@ -35,5 +28,10 @@ public class Config {
 
     public String getString(String path) {
         return cfg.getString(path);
+    }
+
+    private final CooldownPrevent<CommandSender> cd = new CooldownPrevent<>(50);
+    public void sendMessage(CommandSender sender, String id, String... rpl) {
+        if (!cd.isCancelled(null, sender)) cfg.sendMessage(sender, id, rpl);
     }
 }

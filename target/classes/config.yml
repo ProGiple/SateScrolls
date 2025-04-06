@@ -2,28 +2,43 @@ inactiveScroll:
   stackable: false # могут ли они стакаться?
   material: PAPER
   glowing: false
-  name: ''
+  displayName: " "
   lore: []
 completedScroll:
   stackable: false # могут ли они стакаться?
   material: PAPER
   glowing: true
-  name: ''
+  displayName: " "
   lore: [] # $rarity
 config:
   mainScrollsCanStack: false # могут ли они стакаться?
   loadExamples: true
 messages:
-  noPerm: "&bSateScrolls » &fУ вас нет прав!"
-  noArgs: "&bSateScrolls » &fНе хватает аргументов для команды!"
-  unknownCommand: "&bSateScrolls » &fНеизвестная команда!"
-  reloadAll: "&bSateScrolls » &fВы перезагрузили все конфиги!"
-  reloadMessages: "&bSateScrolls » &fВы перезагрузили сообщения!"
-  reloadScrolls: "&bSateScrolls » &fВы перезагрузили свитки!"
-  reloadRarities: "&bSateScrolls » &fВы перезагрузили редкости!"
-  reloadConfig: "&bSateScrolls » &fВы перезагрузили конфиг!"
-  playerOffline: "&bSateScrolls » &fИгрок не в сети!"
-  left: "&bSateScrolls » &fОсталось &b$left / $max &fшт."
-  notExists: "&bSateScrolls » &fЭтого не существует!"
-  itemIsAir: "&bSateScrolls » &fНельзя выдавать воздух!"
-  setItem: "&bSateScrolls » &fВы успешно добавили предмет &d$material &7($id) &fв редкость $rarity!"
+  noPerm:
+    - "&bSateScrolls » &fУ вас нет прав!"
+  noArgs:
+    - "&bSateScrolls » &fНе хватает аргументов для команды!"
+  unknownCommand:
+    - "&bSateScrolls » &fНеизвестная команда!"
+  reloadAll:
+    - "&bSateScrolls » &fВы перезагрузили все конфиги!"
+  reloadMessages:
+    - "&bSateScrolls » &fВы перезагрузили сообщения!"
+  reloadScrolls:
+    - "&bSateScrolls » &fВы перезагрузили свитки!"
+  reloadRarities:
+    - "&bSateScrolls » &fВы перезагрузили редкости!"
+  reloadConfig:
+    - "&bSateScrolls » &fВы перезагрузили конфиг!"
+  playerOffline:
+    - "&bSateScrolls » &fИгрок не в сети!"
+  left:
+    - "&bSateScrolls » &fОсталось &b{0} / {1} &fшт."
+  notExists:
+    - "&bSateScrolls » &fЭтого не существует!"
+  itemIsAir:
+    - "&bSateScrolls » &fНельзя выдавать воздух!"
+  setItem:
+    - "&bSateScrolls » &fВы успешно добавили предмет &d{0} &fв редкость {1}!"
+  craftingWithShift:
+    - "&bSateScrolls » &fНельзя крафтить предмет для свитка через шифт!"

@@ -13,48 +13,37 @@ import org.comp.progiple.satescrolls.SateScrolls;
 import org.comp.progiple.satescrolls.Utils;
 import org.comp.progiple.satescrolls.scrolls.IScroll;
 import org.comp.progiple.satescrolls.scrolls.Rarity;
+import org.novasparkle.lunaspring.API.Menus.Items.NonMenuItem;
+import org.novasparkle.lunaspring.API.Util.Service.managers.ColorManager;
+import org.novasparkle.lunaspring.API.Util.Service.managers.NBTManager;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
 @Getter
-public class CompletedScroll implements IScroll {
-    private final ItemStack item;
+public class CompletedScroll extends NonMenuItem implements IScroll {
     private final Rarity rarity;
 
-    @SuppressWarnings("deprecation")
     public CompletedScroll(ConfigurationSection section, Rarity rarity) {
-        Material material = Material.STONE;
-        String stringMaterial = section.getString("material");
-        if (stringMaterial != null) material = Material.getMaterial(stringMaterial);
-
-        assert material != null;
-        this.item = new ItemStack(material);
+        super(section);
         this.rarity = rarity;
 
-        ItemMeta meta = this.item.getItemMeta();
-        meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES, ItemFlag.HIDE_DYE, ItemFlag.HIDE_ENCHANTS);
-        meta.setDisplayName(Utils.color(section.getString("name")));
+        this.getItemStack().addItemFlags(ItemFlag.HIDE_ATTRIBUTES, ItemFlag.HIDE_DYE, ItemFlag.HIDE_ENCHANTS);
+        List<String> lore = new ArrayList<>(this.getLore());
+        lore.replaceAll(line -> ColorManager.color(line.replace("$rarity", this.rarity.getName())));
+        this.setLore(lore);
 
-        List<String> lore = section.getStringList("lore");
-        lore.replaceAll(line -> Utils.color(line.replace("$rarity", this.rarity.getName())));
-        meta.setLore(lore);
-        this.item.setItemMeta(meta);
+        this.setGlowing(section.getBoolean("glowing"));
 
-        if (section.getBoolean("glowing")) {
-            this.item.addUnsafeEnchantment(Enchantment.ARROW_FIRE, 1);
-        }
-
-        NBT.modify(this.item, nbt -> {
-            nbt.setByte("sateScrollTypeByte", (byte) 2);
-            nbt.setString("stackable", section.getBoolean("stackable") ? null : UUID.randomUUID().toString());
-            nbt.setString("rarity", this.rarity.getId());
-        });
-        SateScrolls.getIScrollSet().add(this);
+        NBTManager.setByte(this.getItemStack(), "sateScrollTypeByte", (byte) 2);
+        NBTManager.setString(this.getItemStack(), "stackable",
+                section.getBoolean("stackable") ? null : UUID.randomUUID().toString());
+        NBTManager.setString(this.getItemStack(), "rarity", this.rarity.getId());
     }
 
     @Override
     public void give(Player player) {
-        player.getInventory().addItem(this.item);
+        player.getInventory().addItem(this.getItemStack());
     }
 }

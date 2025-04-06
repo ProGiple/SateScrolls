@@ -1,20 +1,12 @@
 package org.comp.progiple.satescrolls;
 
 import lombok.Getter;
-import org.bukkit.event.Listener;
-import org.bukkit.plugin.java.JavaPlugin;
 import org.comp.progiple.satescrolls.configs.Config;
 import org.comp.progiple.satescrolls.listeners.*;
-import org.comp.progiple.satescrolls.listeners.tasks.*;
-import org.comp.progiple.satescrolls.scrolls.IScroll;
-import org.novasparkle.lunaspring.Events.MenuHandler;
+import org.comp.progiple.satescrolls.listeners.tasks.realized.*;
+import org.novasparkle.lunaspring.LunaPlugin;
 
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Set;
-
-public final class SateScrolls extends JavaPlugin {
-    @Getter private final static Set<IScroll> iScrollSet = new HashSet<>();
+public final class SateScrolls extends LunaPlugin {
     @Getter private static SateScrolls plugin;
 
     @Override
@@ -22,42 +14,16 @@ public final class SateScrolls extends JavaPlugin {
         plugin = this;
         saveDefaultConfig();
 
-        if (Config.getBool("config.loadExamples")) {
-            plugin.saveResource("rarities/common.yml", false);
-            plugin.saveResource("scrolls/scroll1.yml", false);
-            plugin.saveResource("scrolls/scroll2.yml", false);
-            plugin.saveResource("scrolls/scroll3.yml", false);
-            plugin.saveResource("scrolls/scroll4.yml", false);
-            plugin.saveResource("scrolls/scroll5.yml", false);
-            plugin.saveResource("scrolls/scroll6.yml", false);
-            plugin.saveResource("scrolls/scroll7.yml", false);
-            System.out.println("!!! Выключите загрузку примеров в конфиге config.yml !!!");
-        }
-
+        this.initialize();
+        this.loadFiles(Config.getBool("config.loadExamples"),
+                "rarities/common.yml", "scrolls/scroll1.yml", "scrolls/scroll2.yml",
+                "scrolls/scroll3.yml", "scrolls/scroll4.yml", "scrolls/scroll5.yml",
+                "scrolls/scroll6.yml", "scrolls/scroll7.yml");
         Utils.loadAllConfigs();
 
-        this.reg(new GoDistanceEvent());
-        this.reg(new BreakItemEvent());
-        this.reg(new JoinLeaveEvents());
-        this.reg(new KillEntityEvent());
-        this.reg(new InteractEvent());
-        this.reg(new SmithItemEvent());
-        this.reg(new FurnaceBurnEvent());
-        this.reg(new CraftItemEvent());
-        this.reg(new MenuHandler());
-        this.reg(new PlaceEvent());
-
-        Command command = new Command();
-        Objects.requireNonNull(getCommand("satescrolls")).setExecutor(command);
-        Objects.requireNonNull(getCommand("satescrolls")).setTabCompleter(command);
-    }
-
-    @Override
-    public void onDisable() {
-        // Plugin shutdown logic
-    }
-
-    private void reg(Listener listener) {
-        getServer().getPluginManager().registerEvents(listener, plugin);
+        this.registerListeners(new BlockPlaceHandler(), new CraftItemHandler(), new FurnaceHandler(),
+                new SmithItemHandler(), new InteractHandler(), new KillEntityHandler(), new JoinLeaveHandler(),
+                new BreakItemHandler(), new GoDistanceHandler());
+        this.registerTabExecutor(new Command(), "satescrolls");
     }
 }

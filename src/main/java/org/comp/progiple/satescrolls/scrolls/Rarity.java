@@ -1,7 +1,7 @@
 package org.comp.progiple.satescrolls.scrolls;
 
 import lombok.Getter;
-import org.comp.progiple.satescrolls.Utils;
+import org.novasparkle.lunaspring.API.Util.Service.managers.ColorManager;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -15,7 +15,7 @@ public class Rarity {
     private final double chance;
     public Rarity(String id, String name, double chance) {
         this.id = id;
-        this.name = Utils.color(name);
+        this.name = ColorManager.color(name);
         this.chance = chance;
         rarityMap.put(this.id, this);
     }

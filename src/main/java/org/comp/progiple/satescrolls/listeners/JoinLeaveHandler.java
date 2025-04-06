@@ -13,14 +13,14 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-public class JoinLeaveEvents implements Listener {
+public class JoinLeaveHandler implements Listener {
     private final Map<UUID, Integer> tasks = new HashMap<>();
 
     @EventHandler public void onJoin(PlayerJoinEvent e) {
         Player player = e.getPlayer();
         Runnable runnable = new Runnable(player);
 
-        int task = runnable.runTaskTimer(SateScrolls.getPlugin(), 1200, 1200).getTaskId();
+        int task = runnable.runTaskTimer(SateScrolls.getPlugin(), 1200L, 1200L).getTaskId();
         this.tasks.put(player.getUniqueId(), task);
     }
 

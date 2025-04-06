@@ -5,7 +5,7 @@ menu:
   rows: 4
   maxLootItems: 11
   items:
-    decorative:
+    decorations:
       0:
         material: WHITE_STAINED_GLASS_PANE
         displayName: "&7Разделитель"

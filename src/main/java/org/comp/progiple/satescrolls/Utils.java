@@ -5,20 +5,16 @@ import org.bukkit.ChatColor;
 import org.comp.progiple.satescrolls.configs.Config;
 import org.comp.progiple.satescrolls.configs.RarityConfig;
 import org.comp.progiple.satescrolls.configs.ScrollConfig;
+import org.novasparkle.lunaspring.API.Util.Service.managers.ColorManager;
 
 import java.io.File;
 import java.util.Objects;
 
 @UtilityClass
 public class Utils {
-    public String color(String text) {
-        return ChatColor.translateAlternateColorCodes('&', text);
-    }
-
     public void loadAllConfigs() {
         loadRaritiesConfigs();
         loadScrollConfigs();
-        loadMessages();
         Config.reload();
     }
 
@@ -41,13 +37,6 @@ public class Utils {
                 if (!file.exists() || file.isDirectory()) continue;
                 new RarityConfig(file);
             }
-        }
-    }
-
-    public void loadMessages() {
-        Config.getMessageMap().clear();
-        for (String messageId : Config.getSection("messages").getKeys(false)) {
-            Config.getMessageMap().put(messageId, Utils.color(Config.getString(String.format("messages.%s", messageId))));
         }
     }
 }

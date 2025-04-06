@@ -7,47 +7,42 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.inventory.ItemStack;
 import org.comp.progiple.satescrolls.scrolls.Rarity;
+import org.novasparkle.lunaspring.API.Configuration.Configuration;
 
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
-@Getter
 public class RarityConfig {
     @Getter
     private final static Map<Rarity, RarityConfig> rarityCfgMap = new HashMap<>();
 
-    private final Rarity rarity;
-    private final File file;
-    private FileConfiguration cfg;
+    @Getter private final Rarity rarity;
+    @Getter private final String id;
+    private final Configuration config;
     public RarityConfig(File file) {
-        this.file = file;
-        this.reload();
+        this.config = new Configuration(file);
 
-        String id = file.getName().replace(".yml", "").toUpperCase();
-        this.rarity = new Rarity(id, this.getString("name"), this.getDouble("chance"));
+        this.id = file.getName().replace(".yml", "").toUpperCase();
+        this.rarity = new Rarity(this.id, this.getString("name"), this.getDouble("chance"));
         rarityCfgMap.put(this.rarity, this);
     }
 
-    public void reload() {
-        this.cfg = YamlConfiguration.loadConfiguration(this.file);
-    }
-
     public String getString(String path) {
-        return this.cfg.getString(path);
+        return this.config.getString(path);
     }
 
     public double getDouble(String path) {
-        return this.cfg.getDouble(path);
+        return this.config.self().getDouble(path);
     }
 
     public ConfigurationSection getMenuSection() {
-        return this.cfg.getConfigurationSection("menu");
+        return this.config.getSection("menu");
     }
 
     @SneakyThrows
     public void setItem(String id, ItemStack itemStack) {
-        this.cfg.set(String.format("menu.items.loot.%s", id), itemStack);
-        this.cfg.save(this.file);
+        this.config.set(String.format("menu.items.loot.%s", id), itemStack);
+        this.config.save();
     }
 }

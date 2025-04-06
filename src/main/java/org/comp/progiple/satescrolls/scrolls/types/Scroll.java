@@ -17,14 +17,15 @@ import org.comp.progiple.satescrolls.scrolls.IScroll;
 import org.comp.progiple.satescrolls.scrolls.Rarity;
 import org.comp.progiple.satescrolls.scrolls.ScrollManager;
 import org.comp.progiple.satescrolls.scrolls.TaskType;
+import org.novasparkle.lunaspring.API.Menus.Items.NonMenuItem;
+import org.novasparkle.lunaspring.API.Util.Service.managers.NBTManager;
+import org.novasparkle.lunaspring.API.Util.utilities.LunaMath;
 
 import java.util.*;
 
 @Getter
-public class Scroll implements IScroll {
+public class Scroll extends NonMenuItem implements IScroll {
     private final String id;
-    private final ItemStack item;
-    private final List<String> defaultLore;
 
     private final Rarity rarity;
     private final TaskType type;
@@ -33,16 +34,16 @@ public class Scroll implements IScroll {
 
     @Setter private int nowCount;
 
-    @SuppressWarnings("deprecation")
     public Scroll(String id, ConfigurationSection itemSection, ConfigurationSection scrollSection) {
+        super(itemSection);
         this.id = id;
         this.rarity = Rarity.getRarityMap().get(scrollSection.getString("rarity"));
         this.type = TaskType.valueOf(Objects.requireNonNull(scrollSection.getString("type")).toUpperCase());
 
-        String[] splitedCount = Objects.requireNonNull(scrollSection.getString("count")).split("-");
-        this.count = splitedCount.length <= 1 ? Integer.parseInt(splitedCount[0]) : new Random().nextInt(
-                Integer.parseInt(splitedCount[1]) - Integer.parseInt(splitedCount[0])) + Integer.parseInt(splitedCount[0]);
-
+        String strCount = scrollSection.getString("count");
+        this.count = strCount == null ? 10 : (strCount.contains("-") ?
+                        LunaMath.getRandomInt(Objects.requireNonNull(strCount))
+                        : LunaMath.toInt(strCount));
         this.nowCount = this.count;
         switch (this.type) {
             default -> this.additive = null;
@@ -51,38 +52,21 @@ public class Scroll implements IScroll {
             case BREAK_ITEM, CRAFT, SMITH_ITEM, FURNACE_BURN_ITEM -> this.additive = scrollSection.getString("item_material");
         }
 
-        String stringMaterial = itemSection.getString("material");
-        Material material = Material.STONE;
-        if (stringMaterial != null) material = Material.getMaterial(stringMaterial);
+        this.setGlowing(itemSection.getBoolean("glowing"));
+        this.getItemStack().addItemFlags(ItemFlag.HIDE_ENCHANTS, ItemFlag.HIDE_DYE, ItemFlag.HIDE_ATTRIBUTES);
 
-        boolean isGlowed = itemSection.getBoolean("glowing");
-        String name = Utils.color(itemSection.getString("name"));
-        this.defaultLore = itemSection.getStringList("lore");
+        NBTManager.setByte(this.getItemStack(), "sateScrollTypeByte", (byte) 1);
+        NBTManager.setString(this.getItemStack(), "scroll-id", this.id);
+        NBTManager.setInt(this.getItemStack(), "scroll-nowCount", this.nowCount);
+        NBTManager.setInt(this.getItemStack(), "scroll-count", this.count);
+        NBTManager.setString(this.getItemStack(), "stackable",
+                Config.getBool("config.mainScrollsCanStack") ? null : UUID.randomUUID().toString());
 
-        assert material != null;
-        this.item = new ItemStack(material);
-        ItemMeta meta = this.item.getItemMeta();
-        meta.setDisplayName(name);
-        meta.addItemFlags(ItemFlag.HIDE_ENCHANTS, ItemFlag.HIDE_DYE, ItemFlag.HIDE_ATTRIBUTES);
-        this.item.setItemMeta(meta);
-
-        if (isGlowed) {
-            this.item.addUnsafeEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL, 1);
-        }
-        NBT.modify(this.item, nbt -> {
-            nbt.setByte("sateScrollTypeByte", (byte) 1);
-            nbt.setString("scroll-id", this.id);
-            nbt.setInteger("scroll-nowCount", this.nowCount);
-            nbt.setInteger("scroll-count", this.count);
-            nbt.setString("stackable", Config.getBool("config.mainScrollsCanStack") ? null : UUID.randomUUID().toString());
-        });
-
-        ScrollManager.updateLore(this.item, this.count, this.nowCount);
-        SateScrolls.getIScrollSet().add(this);
+        ScrollManager.updateLore(this.getItemStack(), this.count, this.nowCount);
     }
 
     @Override
     public void give(Player player) {
-        player.getInventory().addItem(this.item);
+        player.getInventory().addItem(this.getItemStack());
     }
 }

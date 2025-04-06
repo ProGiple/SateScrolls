@@ -1,6 +1,7 @@
 item:
-  name: ''
-  lore: [] # $need_count, $now_count, $rarity
+  displayName: "play time"
+  lore:
+    - "$now_count / $need_count | $rarity" # $need_count, $now_count, $rarity
   material: PAPER
   glowing: false
 scroll:

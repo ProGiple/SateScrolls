@@ -10,6 +10,8 @@ import org.comp.progiple.satescrolls.Utils;
 import org.comp.progiple.satescrolls.configs.Config;
 import org.comp.progiple.satescrolls.configs.ScrollConfig;
 import org.comp.progiple.satescrolls.scrolls.types.CompletedScroll;
+import org.novasparkle.lunaspring.API.Util.Service.managers.ColorManager;
+import org.novasparkle.lunaspring.API.Util.Service.managers.NBTManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,7 +20,7 @@ import java.util.Objects;
 @UtilityClass
 public class ScrollManager {
     public String getId(ItemStack item) {
-        return NBT.get(item, nbt -> (String) nbt.getString("scroll-id"));
+        return NBTManager.getString(item, "scroll-id");
     }
 
     public ScrollConfig getScrollCfg(String id) {
@@ -29,7 +31,7 @@ public class ScrollManager {
         Rarity rarity = null;
         switch (ScrollManager.getType(scroll)) {
             case 1 -> rarity = ScrollManager.getScrollCfg(ScrollManager.getId(scroll)).getRarity();
-            case 2 -> rarity = Rarity.getRarityMap().get(NBT.get(scroll, nbt -> (String) nbt.getString("rarity")));
+            case 2 -> rarity = Rarity.getRarityMap().get(NBTManager.getString(scroll, "rarity"));
         }
         return rarity;
     }
@@ -37,27 +39,28 @@ public class ScrollManager {
     public void complete(Player player, ItemStack scroll) {
         Rarity rarity = ScrollManager.getRarity(scroll);
         scroll.setAmount(scroll.getAmount() - 1);
+
         CompletedScroll completedScroll = new CompletedScroll(Config.getSection("completedScroll"), rarity);
         completedScroll.give(player);
     }
 
     public int getMaxCount(ItemStack itemStack) {
-        return NBT.get(itemStack, nbt -> (Integer) nbt.getInteger("scroll-count"));
+        return NBTManager.getInt(itemStack, "scroll-count");
     }
 
     public int getNowCount(ItemStack itemStack) {
-        return NBT.get(itemStack, nbt -> (Integer) nbt.getInteger("scroll-nowCount"));
+        return NBTManager.getInt(itemStack, "scroll-nowCount");
     }
 
     public byte getType(ItemStack itemStack) {
-        return NBT.get(itemStack, nbt -> (Byte) nbt.getByte("sateScrollTypeByte"));
+        return NBTManager.getByte(itemStack, "sateScrollTypeByte");
     }
 
     @SuppressWarnings("deprecation")
     public void updateLore(ItemStack scroll, int count, int nowCount) {
         List<String> lore = new ArrayList<>(ScrollManager.getScrollCfg(ScrollManager.getId(scroll))
                 .getItemSection().getStringList("lore"));
-        lore.replaceAll(line -> Utils.color(line
+        lore.replaceAll(line -> ColorManager.color(line
                 .replace("$need_count", String.valueOf(count))
                 .replace("$now_count", String.valueOf(nowCount))
                 .replace("$rarity", ScrollManager.getRarity(scroll).getName())));
@@ -94,8 +97,6 @@ public class ScrollManager {
 
     public void removeCount(ItemStack scroll, int nowCount, byte res) {
         ScrollManager.updateLore(scroll, ScrollManager.getMaxCount(scroll), nowCount - res);
-        NBT.modify(scroll, nbt -> {
-            nbt.setInteger("scroll-nowCount", nowCount - res);
-        });
+        NBTManager.setInt(scroll, "scroll-nowCount", nowCount - res);
     }
 }
